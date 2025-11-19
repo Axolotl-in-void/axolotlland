@@ -2,16 +2,22 @@
 <html>
 <head>
 <link rel="icon" href="start.gif">
- <title> Axolotl's supercool website</title>
- <style>
-  @font-face {
+<title>Axolotl's supercool website</title>
+<style>
+@font-face {
     font-family: 'OCRA';
     src: url('ocra.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
-    /* Floating Discord Embed */
-  .discord-embed {
+
+/* Floating Discord Embed */
+.discord-embed {
+    animation-name: floating;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-direction:alternate;
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -27,61 +33,83 @@
     transition: transform 0.1s, box-shadow 0.2s;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     z-index: 9999;
-  }
-
-  .discord-embed:hover {
+}
+.discord-embed:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-  }
-
-  .discord-embed img {
+}
+.discord-embed img {
     width: 48px;
     height: 48px;
     border-radius: 8px;
     margin-right: 12px;
     flex-shrink: 0;
-  }
-
-  .discord-embed .content {
-    flex: 1;
-  }
-
-  .discord-embed .title {
-    font-weight: bold;
-    margin-bottom: 4px;
-    font-size: 16px;
-  }
-
-  .discord-embed .description {
-    font-size: 14px;
-    margin-bottom: 8px;
-  }
-
-  .discord-embed .button {
+}
+.discord-embed .content { flex: 1; }
+.discord-embed .title { font-weight: bold; margin-bottom: 4px; font-size: 16px; }
+.discord-embed .description { font-size: 14px; margin-bottom: 8px; }
+.discord-embed .button {
     display: inline-block;
-    padding: 6px 12px;
+    padding: 4px 1px;
     background-color: #5865f2;
     color: white;
     border-radius: 4px;
     font-weight: bold;
     text-decoration: none;
     font-size: 14px;
-  }
+}
+.discord-embed .button:hover { background-color: #4752c4; }
 
-  .discord-embed .button:hover {
-    background-color: #4752c4;
-  }
 body {
-background-color:#141514;
-color:#D2C7C6;
- font-size: 40px;
- font-family: "OCRA";
- padding-top: 20px;
- padding-left: 20px;
- text-align:center;
+    background-color:#141514;
+    color:#D2C7C6;
+    font-size: 30px;
+    font-family: "OCRA";
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align:center;
 }  
- </style>
- <a href="https://discord.gg/TWpUMJ9rmp" class="discord-embed" target="_blank">
+
+.titlebar {
+    margin: 20px auto;          /* center horizontally with some top/bottom spacing */
+    background-color: #545754;
+    border-radius: 4px;
+    padding: 0px 20px;
+    max-width: 800px;           /* prevents giant width on desktop */
+    font-size: clamp(24px, 6vw, 30px); /* scales with screen but stays in reasonable range */
+}
+
+
+.floating {  
+    animation-name: floating;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-direction:alternate;
+}
+
+@keyframes floating {
+    from { transform: translate(0,  0px); }
+    65%  { transform: translate(0, 5px); }
+    to   { transform: translate(0, -0px); }    
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    body { font-size: 20px; }
+    .discord-embed { bottom: 10px; right: 10px; max-width: 90%; padding: 8px; }
+}
+</style>
+
+</head>
+<body>
+<div class="titlebar"><h1>My website</h1></div>
+<div class="content">
+Hewwo welcome to my website :3 not much here for now :( but its fine
+</div>
+
+<a href="https://discord.gg/TWpUMJ9rmp" class="discord-embed" target="_blank">
   <img src="discord.webp" alt="Discord Logo">
   <div class="content">
     <div class="title">Join Our Discord! :3</div>
@@ -89,22 +117,13 @@ color:#D2C7C6;
     <div><span class="button">Join Now</span></div>
   </div>
 </a>
-</head>
-<body>
-YAY MY OWN WEBSITE
-  
-</body>
+
 <script>
   // Detect mobile devices using userAgent
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  );
-
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   if (isMobile) {
     window.location.replace("index_mobile.html");
   }
 </script>
-
-
-  
+</body>
 </html>
