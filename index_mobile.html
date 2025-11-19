@@ -2,86 +2,116 @@
 <html>
 <head>
 <link rel="icon" href="start.gif">
- <title> Axolotl's supercool website</title>
- <style>
-  @font-face {
+<title>Axolotl's supercool website (Mobile)</title>
+<style>
+@font-face {
     font-family: 'OCRA';
     src: url('ocra.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
 }
-    /* Floating Discord Embed */
-  .discord-embed {
+
+/* Body */
+body {
+    background-color: #141514;
+    color: #D2C7C6;
+    font-family: "OCRA";
+    padding: 5vw;
+    text-align: center;
+    font-size: 5vw;
+}
+
+/* Titlebar: scales width but clamps height */
+.titlebar {
+    margin: 5vw auto;
+    background-color: #545754;
+    border-radius: 4px;
+    padding: 4vw 5vw;
+    max-width: 90%;
+    font-size: clamp(24px, 8vw, 36px);
+    line-height: 1.1;
+}
+
+/* Discord Embed (fixed bottom center, bigger) */
+.discord-embed {
+    animation-name: floating;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-direction: alternate;
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     border: 1px solid #2c2f33;
-    border-radius: 8px;
+    border-radius: 16px;
     background-color: #36393f;
     color: #ffffff;
-    padding: 12px;
-    max-width: 320px;
+    padding: 24px; /* doubled padding */
+    max-width: 95%;
     text-decoration: none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
     transition: transform 0.1s, box-shadow 0.2s;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     z-index: 9999;
-  }
-
-  .discord-embed:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-  }
-
-  .discord-embed img {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
-
-  .discord-embed .content {
-    flex: 1;
-  }
-
-  .discord-embed .title {
+}
+.discord-embed:hover {
+    transform: translateX(-50%) scale(1.03);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+.discord-embed img {
+    width: 40vw; /* doubled icon size */
+    max-width: 160px;
+    height: auto;
+    border-radius: 16px;
+    margin-right: 16px;
+}
+.discord-embed .content { flex: 1; text-align: left; }
+.discord-embed .title {
     font-weight: bold;
+    font-size: clamp(36px, 8vw, 64px); /* doubled size */
+    line-height: 1.1;
     margin-bottom: 4px;
-    font-size: 16px;
-  }
-
-  .discord-embed .description {
-    font-size: 14px;
+}
+.discord-embed .description {
+    font-size: clamp(28px, 6vw, 48px); /* doubled size */
     margin-bottom: 8px;
-  }
-
-  .discord-embed .button {
+}
+.discord-embed .button {
     display: inline-block;
-    padding: 6px 12px;
+    padding: 12px 24px; /* doubled size */
     background-color: #5865f2;
     color: white;
-    border-radius: 4px;
+    border-radius: 12px;
     font-weight: bold;
     text-decoration: none;
-    font-size: 14px;
-  }
-
-  .discord-embed .button:hover {
+    font-size: clamp(24px, 5vw, 48px); /* doubled size */
+}
+.discord-embed .button:hover {
     background-color: #4752c4;
-  }
-body {
-background-color:#141514;
-color:#D2C7C6;
- font-size: 40px;
- font-family: "OCRA";
- padding-top: 20px;
- padding-left: 20px;
-  text-align:centr;
-}  
- </style>
- <a href="https://discord.gg/TWpUMJ9rmp" class="discord-embed" target="_blank">
+}
+
+/* Floating animation */
+.floating {
+    animation-name: floating;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-direction: alternate;
+}
+@keyframes floating {
+    from { transform: translateX(-50%) translateY(0px); }
+    50% { transform: translateX(-50%) translateY(8px); }
+    to { transform: translateX(-50%) translateY(0px); }
+}
+</style>
+</head>
+<body>
+<div class="titlebar"><h1>My website</h1></div>
+<div class="content">
+Hewwo welcome to my website :3 not much here for now :( but it’s fine
+</div>
+
+<a href="https://discord.gg/TWpUMJ9rmp" class="discord-embed floating" target="_blank">
   <img src="discord.webp" alt="Discord Logo">
   <div class="content">
     <div class="title">Join Our Discord! :3</div>
@@ -89,9 +119,5 @@ color:#D2C7C6;
     <div><span class="button">Join Now</span></div>
   </div>
 </a>
-</head>
-<body>
-YAY MY OWN WEBSITE
-  
 </body>
 </html>
