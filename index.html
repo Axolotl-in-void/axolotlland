@@ -148,26 +148,27 @@ window.addEventListener("mousemove", e => {
     mouseY = e.clientY / window.innerHeight;
 });
 
-function mountainFn(x, seed, scale) {
+function jagged(x, seed) {
     return (
-        Math.sin(x * 0.002 * scale + seed * Math.PI) +
-        Math.sin(x * 0.006 * scale + seed * Math.E) * 0.6 +
-        Math.sin(x * 0.012 * scale + seed * Math.SQRT2) * 0.3
+        Math.sin(x * 0.003 + seed * Math.PI) +
+        Math.sin(x * 0.011 + seed * Math.E) * 0.7 +
+        Math.sin(x * 0.027 + seed * Math.SQRT2) * 0.4 +
+        Math.sin(x * 0.071 + seed * 1.618) * 0.25
     );
 }
 
-function drawMountainLayer(scroll, depth, color, heightFactor, seed) {
-    const baseY = canvas.height * (1 - heightFactor);
-    const amp = canvas.height * 0.12 * heightFactor;
-    const step = Math.max(6, canvas.width / 180);
-    const parallax = scroll * depth;
+function drawMountainLayer(scroll, depth, color, baseHeight, seed) {
+    const yBase = canvas.height * baseHeight;
+    const amp = canvas.height * 0.18;
+    const step = Math.max(4, canvas.width / 260);
+    const offset = scroll * depth * 0.6;
 
     ctx.beginPath();
     ctx.moveTo(0, canvas.height);
 
-    for (let x = 0; x <= canvas.width; x += step) {
-        const h = mountainFn(x + parallax, seed, canvas.width / 1200);
-        ctx.lineTo(x, baseY + h * amp);
+    for (let x = -step * 4; x <= canvas.width + step * 4; x += step) {
+        const h = jagged(x + offset, seed);
+        ctx.lineTo(x, yBase + h * amp);
     }
 
     ctx.lineTo(canvas.width, canvas.height);
@@ -187,42 +188,42 @@ function drawBg() {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const sunSize = Math.min(canvas.width, canvas.height) * 0.14;
+    const sunSize = Math.min(canvas.width, canvas.height) * 0.13;
+    const sunX = canvas.width * (0.5 + (mouseX - 0.5) * 0.04);
+    const sunY = canvas.height * (0.34 + (mouseY - 0.5) * 0.04);
+
     ctx.beginPath();
-    ctx.arc(
-        canvas.width * (0.5 + (mouseX - 0.5) * 0.08),
-        canvas.height * (0.35 + (mouseY - 0.5) * 0.08),
-        sunSize,
-        0,
-        Math.PI * 2
-    );
+    ctx.arc(sunX, sunY, sunSize, 0, Math.PI * 2);
     ctx.fillStyle = "#ffcc66";
     ctx.fill();
 
     ctx.strokeStyle = "rgba(255,0,255,0.25)";
     ctx.lineWidth = 1;
 
-    const spacing = canvas.width / 18;
-    for (let y = canvas.height * 0.6; y < canvas.height; y += spacing) {
+    const spacing = canvas.width / 12;
+    const gridOffsetX = (mouseX - 0.5) * spacing * 0.4;
+    const gridOffsetY = (mouseY - 0.5) * spacing * 0.4;
+
+    for (let y = canvas.height * 0.6 + gridOffsetY; y < canvas.height; y += spacing) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(canvas.width, y);
         ctx.stroke();
     }
 
-    for (let x = 0; x < canvas.width; x += spacing) {
+    for (let x = gridOffsetX; x < canvas.width; x += spacing) {
         ctx.beginPath();
         ctx.moveTo(x, canvas.height * 0.6);
         ctx.lineTo(
-            x + (mouseX - 0.5) * 40,
+            x + (mouseX - 0.5) * 60,
             canvas.height
         );
         ctx.stroke();
     }
 
-    drawMountainLayer(scroll, 0.15, "#0b0012", 0.30, 1.37);
-    drawMountainLayer(scroll, 0.30, "#140018", 0.22, 2.41);
-    drawMountainLayer(scroll, 0.55, "#1d0026", 0.15, 3.73);
+    drawMountainLayer(scroll, 0.12, "#07000c", 0.80, 1.91);
+    drawMountainLayer(scroll, 0.28, "#110016", 0.74, 2.77);
+    drawMountainLayer(scroll, 0.48, "#1c0024", 0.68, 3.61);
 
     requestAnimationFrame(drawBg);
 }
