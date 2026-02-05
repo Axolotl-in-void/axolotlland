@@ -11,7 +11,6 @@
     font-style: normal;
 }
 
-/* Floating Discord Embed */
 .discord-embed {
     animation-name: floating;
     animation-duration: 4s;
@@ -25,7 +24,7 @@
     align-items: center;
     border: 1px solid #2c2f33;
     border-radius: 8px;
-    background-color: #36393f;
+    background-color: #000000;
     color: #ffffff;
     padding: 12px;
     max-width: 320px;
@@ -72,14 +71,13 @@ body {
 }  
 
 .titlebar {
-    margin: 20px auto;          /* center horizontally with some top/bottom spacing */
+    margin: 20px auto;
     background-color: #545754;
     border-radius: 4px;
     padding: 0px 20px;
-    max-width: 800px;           /* prevents giant width on desktop */
-    font-size: clamp(24px, 6vw, 30px); /* scales with screen but stays in reasonable range */
+    max-width: 800px;
+    font-size: clamp(24px, 6vw, 30px);
 }
-
 
 .floating {  
     animation-name: floating;
@@ -95,15 +93,22 @@ body {
     to   { transform: translate(0, -0px); }    
 }
 
-/* Responsive adjustments */
 @media (max-width: 600px) {
     body { font-size: 20px; }
     .discord-embed { bottom: 10px; right: 10px; max-width: 90%; padding: 8px; }
 }
 </style>
-
 </head>
+
 <body>
+<canvas id="bg"></canvas>
+
+<div id="mountains">
+    <div class="mountain back"></div>
+    <div class="mountain mid"></div>
+    <div class="mountain front"></div>
+</div>
+
 <div class="titlebar"><h1>My website</h1></div>
 <div class="content">
 Hewwo welcome to my website :3 not much here for now :( but its fine
@@ -119,11 +124,87 @@ Hewwo welcome to my website :3 not much here for now :( but its fine
 </a>
 
 <script>
-  // Detect mobile devices using userAgent
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  if (isMobile) {
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+if (isMobile) {
     window.location.replace("index_mobile.html");
-  }
+}
+
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+function resizeBg() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeBg);
+resizeBg();
+
+let mouseX = 0.5;
+let mouseY = 0.5;
+let time = 0;
+
+window.addEventListener("mousemove", e => {
+    mouseX = e.clientX / window.innerWidth;
+    mouseY = e.clientY / window.innerHeight;
+});
+
+function drawBg() {
+    time += 0.01;
+
+    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0, "#ff77ff");
+    grad.addColorStop(0.5, "#6a00ff");
+    grad.addColorStop(1, "#000014");
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.beginPath();
+    ctx.arc(
+        canvas.width / 2 + (mouseX - 0.5) * 60,
+        canvas.height * 0.35 + Math.sin(time) * 10,
+        90,
+        0,
+        Math.PI * 2
+    );
+    ctx.fillStyle = "#ffcc66";
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(255,0,255,0.25)";
+    ctx.lineWidth = 1;
+
+    const spacing = 40;
+    for (let y = canvas.height * 0.6; y < canvas.height; y += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
+
+    for (let x = 0; x < canvas.width; x += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, canvas.height * 0.6);
+        ctx.lineTo(x + (mouseX - 0.5) * 40, canvas.height);
+        ctx.stroke();
+    }
+
+    requestAnimationFrame(drawBg);
+}
+drawBg();
+
+window.addEventListener("scroll", () => {
+    const s = window.scrollY;
+    document.querySelector(".back").style.transform = `translateY(${s * 0.05}px)`;
+    document.querySelector(".mid").style.transform = `translateY(${s * 0.1}px)`;
+    document.querySelector(".front").style.transform = `translateY(${s * 0.15}px)`;
+});
+
+window.addEventListener("mousemove", e => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 30;
+    document.querySelector(".back").style.transform += ` translateX(${x * 0.3}px)`;
+    document.querySelector(".mid").style.transform += ` translateX(${x * 0.6}px)`;
+    document.querySelector(".front").style.transform += ` translateX(${x}px)`;
+});
 </script>
 </body>
 </html>
