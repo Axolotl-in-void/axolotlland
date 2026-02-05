@@ -103,12 +103,6 @@ body {
 <body>
 <canvas id="bg"></canvas>
 
-<div id="mountains">
-    <div class="mountain back"></div>
-    <div class="mountain mid"></div>
-    <div class="mountain front"></div>
-</div>
-
 <div class="titlebar"><h1>My website</h1></div>
 <div class="content">
 Hewwo welcome to my website :3 not much here for now :( but its fine
@@ -147,14 +141,37 @@ window.addEventListener("resize", resizeBg);
 resizeBg();
 
 let mouseX = 0.5;
-let time = 0;
+let mouseY = 0.5;
 
 window.addEventListener("mousemove", e => {
     mouseX = e.clientX / window.innerWidth;
+    mouseY = e.clientY / window.innerHeight;
 });
 
+function mountainHeight(x, offset) {
+    return Math.sin(x * 0.004 + offset * Math.PI) * 120 +
+           Math.sin(x * 0.013 + offset * Math.E) * 60 +
+           Math.sin(x * 0.021 + offset * Math.SQRT2) * 40;
+}
+
+function drawMountains(scroll) {
+    const baseY = canvas.height * 0.78;
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height);
+
+    for (let x = 0; x <= canvas.width; x += 8) {
+        const h = mountainHeight(x + scroll * 0.4, scroll * 0.0003);
+        ctx.lineTo(x, baseY + h);
+    }
+
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.closePath();
+    ctx.fillStyle = "#140018";
+    ctx.fill();
+}
+
 function drawBg() {
-    time += 0.01;
+    const scroll = window.scrollY;
 
     const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
     grad.addColorStop(0, "#ff77ff");
@@ -164,11 +181,12 @@ function drawBg() {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    const sunSize = Math.min(canvas.width, canvas.height) * 0.15;
     ctx.beginPath();
     ctx.arc(
-        canvas.width / 2 + (mouseX - 0.5) * 60,
-        canvas.height * 0.35 + Math.sin(time) * 10,
-        90,
+        canvas.width * (0.5 + (mouseX - 0.5) * 0.08),
+        canvas.height * (0.35 + (mouseY - 0.5) * 0.08),
+        sunSize,
         0,
         Math.PI * 2
     );
@@ -189,12 +207,17 @@ function drawBg() {
     for (let x = 0; x < canvas.width; x += spacing) {
         ctx.beginPath();
         ctx.moveTo(x, canvas.height * 0.6);
-        ctx.lineTo(x + (mouseX - 0.5) * 40, canvas.height);
+        ctx.lineTo(
+            x + (mouseX - 0.5) * 40,
+            canvas.height
+        );
         ctx.stroke();
     }
 
+    drawMountains(scroll);
     requestAnimationFrame(drawBg);
 }
+
 drawBg();
 </script>
 </body>
