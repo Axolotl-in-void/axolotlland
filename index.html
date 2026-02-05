@@ -123,8 +123,6 @@ if (isMobile) {
     window.location.replace("index_mobile.html");
 }
 
-document.body.style.backgroundColor = "transparent";
-
 const canvas = document.getElementById("bg");
 canvas.style.position = "fixed";
 canvas.style.top = "0";
@@ -232,31 +230,71 @@ function drawScene(ctxRef) {
     drawMountainLayer(ctxRef, 1.3, "#300040", 0.72, 0.5, 9.1);
 }
 
+function applyChromatic(ctxRef, sourceCanvas) {
+    const width = canvas.width;
+    const height = canvas.height;
+
+    // Create radial mask
+    const edgeGradient = ctxRef.createRadialGradient(
+        width / 2, height / 2, Math.min(width, height) * 0.35,
+        width / 2, height / 2, Math.min(width, height) * 0.5
+    );
+    edgeGradient.addColorStop(0, "rgba(255,255,255,0)");
+    edgeGradient.addColorStop(1, "rgba(255,255,255,1)");
+
+    // Create temp canvas for chroma effect
+    const tmpCanvas = document.createElement("canvas");
+    tmpCanvas.width = width;
+    tmpCanvas.height = height;
+    const tmpCtx = tmpCanvas.getContext("2d");
+
+    tmpCtx.clearRect(0, 0, width, height);
+
+    const offsets = [
+        {x: 4, y: 0, color: "red"},
+        {x: -4, y: 0, color: "green"},
+        {x: 0, y: 4, color: "blue"}
+    ];
+
+    offsets.forEach(ch => {
+        tmpCtx.save();
+        tmpCtx.globalCompositeOperation = "source-over";
+        tmpCtx.globalAlpha = 0.3;
+        tmpCtx.drawImage(sourceCanvas, ch.x, ch.y, width, height);
+        tmpCtx.globalCompositeOperation = "destination-in";
+        tmpCtx.fillStyle = edgeGradient;
+        tmpCtx.fillRect(0, 0, width, height);
+        tmpCtx.restore();
+    });
+
+    // Overlay on main canvas
+    ctxRef.save();
+    ctxRef.globalCompositeOperation = "lighter";
+    ctxRef.drawImage(tmpCanvas, 0, 0);
+    ctxRef.restore();
+}
+
 function drawBg() {
     t += 3.2;
 
+    // Clear offscreen canvas and redraw scene
     offCtx.clearRect(0, 0, canvas.width, canvas.height);
     drawScene(offCtx);
 
-    // CMY Chromatic aberration
+    // Clear main canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.globalCompositeOperation = "screen";
 
-    // Red
-    ctx.drawImage(offCanvas, 2, 0, canvas.width, canvas.height);
-    ctx.globalCompositeOperation = "screen";
+    // Draw everything normally (this includes your page via CSS transparency)
+    ctx.drawImage(offCanvas, 0, 0);
 
-    // Green
-    ctx.drawImage(offCanvas, -2, 0, canvas.width, canvas.height);
-    ctx.globalCompositeOperation = "screen";
-
-    // Blue
-    ctx.drawImage(offCanvas, 0, 2, canvas.width, canvas.height);
+    // Apply chromatic aberration on top
+    applyChromatic(ctx, offCanvas);
 
     requestAnimationFrame(drawBg);
 }
 
 drawBg();
 </script>
+
 </body>
 </html>
