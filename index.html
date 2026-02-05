@@ -30,23 +30,19 @@ window.addEventListener("mousemove", e => {
     mouseY = e.clientY / window.innerHeight;
 });
 
-// Noise functions
-function foregroundNoise(x, seed) {
-    return Math.abs(Math.sin(x * 0.001 + seed)) * 0.8 +
-           Math.abs(Math.sin(x * 0.0025 + seed * 1.9)) * 0.5 +
-           Math.abs(Math.sin(x * 0.005 + seed * 2.7)) * 0.3;
-}
-
-function backgroundNoise(x, seed) {
-    return Math.abs(Math.cos(x * 0.0005 + seed)) * 0.8 +
-           Math.abs(Math.cos(x * 0.0012 + seed * 1.4)) * 0.6 +
-           Math.abs(Math.cos(x * 0.0023 + seed * 3.2)) * 0.4;
+// Jagged noise for mountains
+function jaggedNoise(x, seed, scale = 1) {
+    return (
+        Math.sin(x * 0.001 + seed) * 0.3 +
+        Math.sin(x * 0.003 + seed * 1.5) * 0.2 +
+        Math.sin(x * 0.007 + seed * 2.3) * 0.1
+    ) * scale;
 }
 
 // Draw one mountain layer
-function drawMountainLayer(speed, color, baseRatio, maxHeightRatio, noiseFn, seed) {
+function drawMountainLayer(speed, color, baseRatio, maxHeightRatio, seed) {
     const baseY = canvas.height * baseRatio;
-    const maxHeight = canvas.height * maxHeightRatio;
+    const maxHeight = canvas.height * maxHeightRatio; // max 50%
     const step = canvas.width / 160;
     const offset = t * speed;
 
@@ -54,8 +50,8 @@ function drawMountainLayer(speed, color, baseRatio, maxHeightRatio, noiseFn, see
     ctx.moveTo(-step, canvas.height);
 
     for (let x = -step * 3; x <= canvas.width + step * 3; x += step) {
-        let n = noiseFn(x + offset, seed);
-        let h = n * maxHeight; // scale noise by maxHeight
+        let h = jaggedNoise(x + offset, seed, 1);
+        h = Math.abs(h) * maxHeight; // always positive, scales with maxHeight
         ctx.lineTo(x, baseY - h);
     }
 
@@ -68,7 +64,6 @@ function drawMountainLayer(speed, color, baseRatio, maxHeightRatio, noiseFn, see
 function drawBg() {
     t += 3.2;
 
-    // Background gradient
     const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
     grad.addColorStop(0, "#ff77ff");
     grad.addColorStop(0.5, "#6a00ff");
@@ -76,7 +71,6 @@ function drawBg() {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Sun
     const sunSize = Math.min(canvas.width, canvas.height) * 0.11;
     ctx.beginPath();
     ctx.arc(
@@ -106,11 +100,11 @@ function drawBg() {
         ctx.stroke();
     }
 
-    // Mountain layers: background first, foreground last
-    drawMountainLayer(0.15, "#07000c", 0.86, 0.5, backgroundNoise, 1.2);
-    drawMountainLayer(0.45, "#120018", 0.82, 0.5, backgroundNoise, 3.7);
-    drawMountainLayer(0.85, "#1e002a", 0.78, 0.5, foregroundNoise, 7.9);
-    drawMountainLayer(1.3, "#300040", 0.72, 0.5, foregroundNoise, 9.1);
+    // Mountains: back to front
+    drawMountainLayer(0.15, "#07000c", 0.86, 0.5, 1.2);
+    drawMountainLayer(0.45, "#120018", 0.82, 0.5, 3.7);
+    drawMountainLayer(0.85, "#1e002a", 0.78, 0.5, 7.9);
+    drawMountainLayer(1.3, "#300040", 0.72, 0.5, 9.1);
 
     requestAnimationFrame(drawBg);
 }
