@@ -129,7 +129,14 @@ if (isMobile) {
     window.location.replace("index_mobile.html");
 }
 
+document.body.style.backgroundColor = "transparent";
+
 const canvas = document.getElementById("bg");
+canvas.style.position = "fixed";
+canvas.style.top = "0";
+canvas.style.left = "0";
+canvas.style.zIndex = "-999";
+
 const ctx = canvas.getContext("2d");
 
 function resizeBg() {
@@ -140,12 +147,10 @@ window.addEventListener("resize", resizeBg);
 resizeBg();
 
 let mouseX = 0.5;
-let mouseY = 0.5;
 let time = 0;
 
 window.addEventListener("mousemove", e => {
     mouseX = e.clientX / window.innerWidth;
-    mouseY = e.clientY / window.innerHeight;
 });
 
 function drawBg() {
@@ -191,20 +196,6 @@ function drawBg() {
     requestAnimationFrame(drawBg);
 }
 drawBg();
-
-window.addEventListener("scroll", () => {
-    const s = window.scrollY;
-    document.querySelector(".back").style.transform = `translateY(${s * 0.05}px)`;
-    document.querySelector(".mid").style.transform = `translateY(${s * 0.1}px)`;
-    document.querySelector(".front").style.transform = `translateY(${s * 0.15}px)`;
-});
-
-window.addEventListener("mousemove", e => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 30;
-    document.querySelector(".back").style.transform += ` translateX(${x * 0.3}px)`;
-    document.querySelector(".mid").style.transform += ` translateX(${x * 0.6}px)`;
-    document.querySelector(".front").style.transform += ` translateX(${x}px)`;
-});
 </script>
 </body>
 </html>
