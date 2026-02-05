@@ -132,10 +132,14 @@ canvas.style.left = "0";
 canvas.style.zIndex = "-999";
 
 const ctx = canvas.getContext("2d");
+const offCanvas = document.createElement("canvas");
+const offCtx = offCanvas.getContext("2d");
 
 function resizeBg() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    offCanvas.width = canvas.width;
+    offCanvas.height = canvas.height;
 }
 window.addEventListener("resize", resizeBg);
 resizeBg();
@@ -157,80 +161,97 @@ function jaggedNoise(x, seed) {
     );
 }
 
-function drawMountainLayer(speed, color, baseRatio, maxHeightRatio, seed) {
+function drawMountainLayer(ctxRef, speed, color, baseRatio, maxHeightRatio, seed) {
     const baseY = canvas.height * baseRatio;
     const maxHeight = canvas.height * maxHeightRatio;
     const step = canvas.width / 160;
     const offset = t * speed;
 
-    ctx.beginPath();
-    ctx.moveTo(-step, canvas.height);
+    ctxRef.beginPath();
+    ctxRef.moveTo(-step, canvas.height);
 
     for (let x = -step * 3; x <= canvas.width + step * 3; x += step) {
         let n = jaggedNoise(x + offset, seed);
         let h = Math.abs(n) * maxHeight;
-        ctx.lineTo(x, baseY - h);
+        ctxRef.lineTo(x, baseY - h);
     }
 
-    ctx.lineTo(canvas.width + step, canvas.height);
-    ctx.closePath();
-    ctx.fillStyle = color;
-    ctx.fill();
+    ctxRef.lineTo(canvas.width + step, canvas.height);
+    ctxRef.closePath();
+    ctxRef.fillStyle = color;
+    ctxRef.fill();
 }
 
-function drawBg() {
-    t += 3.2;
-
-    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+function drawScene(ctxRef) {
+    const grad = ctxRef.createLinearGradient(0, 0, 0, canvas.height);
     grad.addColorStop(0, "#ff77ff");
     grad.addColorStop(0.5, "#6a00ff");
     grad.addColorStop(1, "#000014");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctxRef.fillStyle = grad;
+    ctxRef.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Glow Sun
     const sunSize = Math.min(canvas.width, canvas.height) * 0.11;
-    ctx.save();
-    ctx.shadowBlur = sunSize * 0.6;
-    ctx.shadowColor = "#ff99ff";
-    ctx.beginPath();
-    ctx.arc(
+    ctxRef.save();
+    ctxRef.shadowBlur = sunSize * 0.6;
+    ctxRef.shadowColor = "#ff99ff";
+    ctxRef.beginPath();
+    ctxRef.arc(
         canvas.width * (0.5 + (mouseX - 0.5) * 0.025),
         canvas.height * (0.34 + (mouseY - 0.5) * 0.025),
         sunSize,
         0,
         Math.PI * 2
     );
-    ctx.fillStyle = "#ffcc66";
-    ctx.fill();
-    ctx.restore();
+    ctxRef.fillStyle = "#ffcc66";
+    ctxRef.fill();
+    ctxRef.restore();
 
-    // Glow Grid
-    ctx.save();
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = "#ff77ff";
-    ctx.strokeStyle = "rgba(255,0,255,0.25)";
-    ctx.lineWidth = 1;
+    ctxRef.save();
+    ctxRef.shadowBlur = 10;
+    ctxRef.shadowColor = "#ff77ff";
+    ctxRef.strokeStyle = "rgba(255,0,255,0.25)";
+    ctxRef.lineWidth = 1;
     const spacing = canvas.width / 10;
     for (let y = canvas.height * 0.6; y < canvas.height; y += spacing) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
+        ctxRef.beginPath();
+        ctxRef.moveTo(0, y);
+        ctxRef.lineTo(canvas.width, y);
+        ctxRef.stroke();
     }
     for (let x = 0; x < canvas.width; x += spacing) {
-        ctx.beginPath();
-        ctx.moveTo(x, canvas.height * 0.6);
-        ctx.lineTo(x + (mouseX - 0.5) * 90, canvas.height);
-        ctx.stroke();
+        ctxRef.beginPath();
+        ctxRef.moveTo(x, canvas.height * 0.6);
+        ctxRef.lineTo(x + (mouseX - 0.5) * 90, canvas.height);
+        ctxRef.stroke();
     }
-    ctx.restore();
+    ctxRef.restore();
 
-    // Mountains
-    drawMountainLayer(0.15, "#07000c", 0.86, 0.5, 1.2);
-    drawMountainLayer(0.45, "#120018", 0.82, 0.5, 3.7);
-    drawMountainLayer(0.85, "#1e002a", 0.78, 0.5, 7.9);
-    drawMountainLayer(1.3, "#300040", 0.72, 0.5, 9.1);
+    drawMountainLayer(ctxRef, 0.15, "#07000c", 0.86, 0.5, 1.2);
+    drawMountainLayer(ctxRef, 0.45, "#120018", 0.82, 0.5, 3.7);
+    drawMountainLayer(ctxRef, 0.85, "#1e002a", 0.78, 0.5, 7.9);
+    drawMountainLayer(ctxRef, 1.3, "#300040", 0.72, 0.5, 9.1);
+}
+
+function drawBg() {
+    t += 3.2;
+
+    offCtx.clearRect(0, 0, canvas.width, canvas.height);
+    drawScene(offCtx);
+
+    // CMY Chromatic aberration
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = "screen";
+
+    // Red
+    ctx.drawImage(offCanvas, 2, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = "screen";
+
+    // Green
+    ctx.drawImage(offCanvas, -2, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = "screen";
+
+    // Blue
+    ctx.drawImage(offCanvas, 0, 2, canvas.width, canvas.height);
 
     requestAnimationFrame(drawBg);
 }
