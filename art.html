@@ -1,3 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="start.gif">
+<title>Axolotl's supercool website</title>
+
+<style>
+@font-face {
+    font-family: 'OCRA';
+    src: url('ocra.ttf') format('truetype');
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* darker, bigger pixel-art tiles */
+body {
+    font-family: "OCRA";
+    text-align: center;
+    background-color: #111;
+    background-image: 
+      linear-gradient(#222 1px, transparent 1px),
+      linear-gradient(90deg, #222 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+    image-rendering: pixelated;
+}
+
+.titlebar, .content {
+    position: relative;
+    z-index: 1;
+}
+
+.titlebar {
+    margin: 20px auto;
+    background-color: #333; /* muted so vine contrast works */
+    max-width: 800px;
+}
+
+.content {
+    background-color: #333;
+    max-width: 1100px;
+    margin: auto;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="vines"></canvas>
+
+<div class="titlebar vine-anchor"><h1>WELCOME TO THE ART</h1></div>
+<div class="content vine-anchor">
+some art ive gathered made by fwiends or me
+</div>
+
 <script>
 const canvas = document.getElementById("vines");
 const ctx = canvas.getContext("2d");
@@ -5,106 +72,128 @@ const ctx = canvas.getContext("2d");
 function resize() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  spawnVines();
 }
-resize();
 window.addEventListener("resize", resize);
 
-// fake mouse "size"
-const mouse = { x: 0, y: 0, w: 18, h: 18 };
+const mouse = { x:0, y:0, vx:0, vy:0, size:16 }; // bigger hitbox
+
 window.addEventListener("mousemove", e => {
+  mouse.vx = e.clientX - mouse.x;
+  mouse.vy = e.clientY - mouse.y;
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
 
-const GRAVITY = 0.35;
-const FRICTION = 0.995;
-const SEGMENTS = 22;
-const SEG_LENGTH = 10;
-const VINE_COLOR = "#00ff33";
+const GRAVITY = 0.45;
+const FRICTION = 0.99; // slightly looser
+const SEG_LENGTH = 9;
+const VINE_COLOR = "#558844"; // muted green
 
 ctx.imageSmoothingEnabled = false;
 
 class Point {
-  constructor(x, y, pinned = false) {
-    this.x = x;
-    this.y = y;
-    this.oldx = x;
-    this.oldy = y;
+  constructor(x, y, pinned=false) {
+    this.x = x; this.y = y;
+    this.oldx = x; this.oldy = y;
     this.pinned = pinned;
-    this.offset = (Math.random() - 0.5) * 2;
   }
-
   update() {
-    if (this.pinned) return;
+    if(this.pinned) return;
+    let vx=(this.x-this.oldx)*FRICTION;
+    let vy=(this.y-this.oldy)*FRICTION;
+    this.oldx=this.x; this.oldy=this.y;
+    this.x+=vx; this.y+=vy+GRAVITY;
 
-    let vx = (this.x - this.oldx) * FRICTION;
-    let vy = (this.y - this.oldy) * FRICTION;
-
-    this.oldx = this.x;
-    this.oldy = this.y;
-
-    this.x += vx;
-    this.y += vy + GRAVITY;
-
-    // rectangular mouse collision
-    if (
-      this.x > mouse.x - mouse.w &&
-      this.x < mouse.x + mouse.w &&
-      this.y > mouse.y - mouse.h &&
-      this.y < mouse.y + mouse.h
-    ) {
-      this.x += vx * 3;
-      this.y -= 2;
+    const dx=this.x-mouse.x, dy=this.y-mouse.y, dist=Math.hypot(dx,dy);
+    if(dist<mouse.size){
+      const nx=dx/(dist||1), ny=dy/(dist||1);
+      this.x+=nx*4; this.y+=ny*4; // easier to move
+      this.oldx+=mouse.vx*0.5; 
+      this.oldy+=mouse.vy*0.5;
     }
   }
 }
 
 class Vine {
-  constructor(x) {
-    this.points = [];
-    for (let i = 0; i < SEGMENTS; i++) {
-      this.points.push(
-        new Point(x, i * SEG_LENGTH, i === 0)
-      );
+  constructor(x,y){
+    this.segmentCount=26+Math.floor(Math.random()*30);
+    this.points=[];
+    this.baseThickness=3+Math.random()*3;
+
+    const shiftCount=2+Math.floor(Math.random()*3);
+    this.shifts=[];
+    for(let i=0;i<shiftCount;i++){
+      this.shifts.push({
+        at: Math.floor(Math.random()*this.segmentCount),
+        amount:(Math.random()<0.5?-1:1)*this.baseThickness*(0.8+Math.random())
+      });
+    }
+
+    for(let i=0;i<this.segmentCount;i++){
+      let offsetX=0;
+      this.shifts.forEach(s=>{if(i>=s.at) offsetX+=s.amount;});
+      this.points.push(new Point(x+offsetX,y+i*SEG_LENGTH,i===0));
     }
   }
 
-  update() {
-    this.points.forEach(p => p.update());
-    for (let i = 0; i < 6; i++) this.constrain();
+  update(){ this.points.forEach(p=>p.update()); for(let i=0;i<7;i++) this.constrain(); }
+
+  constrain(){
+    for(let i=0;i<this.points.length-1;i++){
+      const p1=this.points[i], p2=this.points[i+1];
+      const dx=p2.x-p1.x, dy=p2.y-p1.y;
+      const dist=Math.hypot(dx,dy)||0.001;
+      const diff=(SEG_LENGTH-dist)/dist*0.5;
+      if(!p1.pinned){p1.x-=dx*diff; p1.y-=dy*diff;}
+      p2.x+=dx*diff; p2.y+=dy*diff;
+    }
   }
 
-  constrain() {
-    for (let i = 0; i < this.points.length - 1; i++) {
-      const p1 = this.points[i];
-      const p2 = this.points[i + 1];
-
-      const dx = p2.x - p1.x;
-      const dy = p2.y - p1.y;
-      const dist = Math.hypot(dx, dy);
-      const diff = (SEG_LENGTH - dist) / dist * 0.5;
-
-      if (!p1.pinned) {
-        p1.x -= dx * diff;
-        p1.y -= dy * diff;
+  draw(){
+    ctx.fillStyle=VINE_COLOR;
+    for(let i=0;i<this.points.length-1;i++){
+      const p1=this.points[i], p2=this.points[i+1];
+      const thickness=this.baseThickness+Math.sin(i*0.6)*1.2;
+      const x1=Math.round(p1.x), y1=Math.round(p1.y);
+      const x2=Math.round(p2.x), y2=Math.round(p2.y);
+      const dx=x2-x1, dy=y2-y1, steps=Math.max(Math.abs(dx),Math.abs(dy));
+      for(let s=0;s<=steps;s++){
+        const x=Math.round(x1+dx*(s/steps));
+        const y=Math.round(y1+dy*(s/steps));
+        ctx.fillRect(x-thickness/2,y-thickness/2,thickness,thickness);
       }
-      p2.x += dx * diff;
-      p2.y += dy * diff;
     }
   }
+}
 
-  draw() {
-    ctx.fillStyle = VINE_COLOR;
+let vines=[];
 
-    for (let i = 0; i < this.points.length - 1; i++) {
-      const p = this.points[i];
+function spawnVines(){
+  vines=[];
+  const anchorOffset=-6;
 
-      // pixel snap + organic wobble
-      const px = Math.round(p.x + p.offset);
-      const py = Math.round(p.y);
+  document.querySelectorAll(".vine-anchor").forEach(el=>{
+    const rect=el.getBoundingClientRect();
+    let x=rect.left+10;
+    while(x<rect.right-10){
+      if(Math.random()<0.8){
+        vines.push(new Vine(x,rect.bottom+anchorOffset));
+      }
+      x+=60+Math.random()*60;
+    }
+  });
+}
 
-      ctx.fillRect(px, py, 4, 4);
+resize();
 
-      // occasional side pixels = vine texture
-      if (i % 3 === 0) {
-        ctx.fil
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  vines.forEach(v=>{v.update(); v.draw();});
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
