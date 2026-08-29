@@ -1,65 +1,46 @@
-<!DOCTYPE html>
 <html>
-<head>
-<link rel="icon" href="start.gif">
-<title>Axolotl's supercool website</title>
-<style>
-@font-face {
-    font-family: 'OCRA';
-    src: url('ocra.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-.discord-embed {
-    animation-name: floating;
-    animation-duration: 4s;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out;
-    animation-direction:alternate;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    border: 1px solid #2c2f33;
-    border-radius: 8px;
-    background-color: #000000;
-    color: #ffffff;
-    padding: 12px;
-    max-width: 320px;
-    text-decoration: none;
-    transition: transform 0.1s, box-shadow 0.2s;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    z-index: 9999;
-}
-.discord-embed:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-}
-.discord-embed img {
-    width: 48px;
-    height: 48px;
-    border-radius: 8px;
-    margin-right: 12px;
-    flex-shrink: 0;
-}
-.discord-embed .content { flex: 1; }
-.discord-embed .title { font-weight: bold; margin-bottom: 4px; font-size: 16px; }
-.discord-embed .description { font-size: 14px; margin-bottom: 8px; }
-.discord-embed .button {
-    display: inline-block;
-    padding: 4px 1px;
-    background-color: #5865f2;
-    color: white;
-    border-radius: 4px;
-    font-weight: bold;
-    text-decoration: none;
-    font-size: 14px;
-}
-.discord-embed .button:hover { background-color: #4752c4; }
-button {
-background: #ff6be6;
+ <head>
+  <title>Axolotl's Land</title>
+  <link rel="icon" type="image/x-icon" href="icon.png">
+  <style>
+ body {
+ background-color:black;
+ color:white;
+ text-align:center;
+  background-image:
+    linear-gradient(rgba(51, 0, 0, 0.7), rgba(51, 0, 0, 0.7)),  /* Dark red overlay */
+    url('end_stone.png');
+ background-repeat: repeat;
+ background-size:320px;
+ margin:0px;
+       image-rendering: pixelated;
+ }
+ h1 {
+ color:#ffaaaa;
+ background-color:#111111;
+ }
+ .content {
+ background-color:#111111;
+ margin-left:20vw;
+ margin-right: 20vw;
+ color:#00bb00;
+ font-size:2vw;
+ }
+ .navbar {
+ position:fixed;
+ left:0;
+ top:0;
+ width: 5vw;
+ height: 100vh;
+ background:#111111;
+ display:flex;
+ flex-direction:column;
+ gap:20px;
+ padding:20px;
+ z-index:12983219231;
+ }
+  .navbar button {
+background: #ff1111;
 font-family: "OCRA";
 border-width: 5px;
 border-color: #000000;
@@ -69,284 +50,52 @@ height: 90px;
 width: 90px;
 margin-left: 1px;
 margin-right: 1px;
+padding-bottom: 0px;
 color: #ffffff;
-}
-button:hover{
-background-color: #f181de;
+ }
+ .navbar button:hover {
+ background-color: #f181de;
 border-color: gray;
 color: #f8f8f8;
 transition: 1.5s;
-
+ }
+.spacer {
+  flex: 1;
 }
-
-body {
-    background-color:#141514;
-    color:#f8f8f8;
-    font-size: 30px;
-    font-family: "OCRA";
-    padding-top: 1px;
-    padding-left: 20px;
-    padding-right: 20px;
-    text-align:center;
-}  
-.content {
-    background-color:#003cff92;
-    color:#f8f8f8;
-    font-size: 30px;
-    font-family: "OCRA";
-    margin: 0px auto;
-    padding-left: 1px;
-    padding-right: 1px;
-    text-align:center;
-    align-self: center;
-    max-width: 1100px;
-}  
-.content2electircboogalo {
-    background-color:#1e1e1f;
-    color:#f8f8f8;
-    font-size: 30px;
-    font-family: "OCRA";
-    margin: 0px auto;
-    padding-left: 1px;
-    padding-right: 1px;
-    text-align:center;
-    align-self: center;
-    max-width: 1100px;
-}  
-.titlebar {
-    margin: 20px auto;
-    background-color: #0037ff;
-    border-radius: 20px;
-    padding: 0px 20px;
-    max-width: 800px;
-    font-size: clamp(24px, 6vw, 30px);
-}
-
-.floating {  
-    animation-name: floating;
-    animation-duration: 4s;
-    animation-iteration-count: infinite;
-    animation-timing-function: ease </span-in-out;
-    animation-direction:alternate;
-}
-
-@keyframes floating {
-    from { transform: translate(0,  0px); }
-    65%  { transform: translate(0, 5px); }
-    to   { transform: translate(0, -0px); }    
-}
-
-@media (max-width: 600px) {
-    body { font-size: 20px; }
-    .discord-embed { bottom: 10px; right: 10px; max-width: 90%; padding: 8px; }
-}
-</style>
-</head>
-
-<body>
-<canvas id="bg"></canvas>
-<div class="floating">
-<div class="titlebar"><h1>WELCOME</h1></div>
+  </style>
+ </head>
+ <body>
+ <nav class="navbar">
+  <a href="art.html"><button>go to art <p> :3</button></a><br>
+<div style="flex: 1;"></div><a href="https://www.qag10.com"><button>go to qag10 <p> (Horrbily broken)</button></a><br>webtags go brr<p>
+<a href="https://gaq9.com"><img src="https://gaq9.com/img/gaq1999.gif" width="88" height="31"></a><br>
+<a href="https://ollix27.neocities.org"><img src="https://ollix27.neocities.org/gigadwarf.gif" width="88" height="31"></a>
+<p>
+Under Construction<br><br>
+ </nav>
+<h1>Welcome</h1>
 <div class="content">
-to Axolotl-land
+im axolotl Hi :3<p>
+my design philosphy is WE DO WHAT LOOKS COOL. <br>(in my objective opinion)<br>
+lfmao.<br> Also join our <a href="https://discord.gg/rc6aNtzwZP">discord</a><br>
+<b>GOD HAS FORSAKEN US</b><br>
+anyway on this site anything i make goes i guess?<p>
+uh... go to my art site i guess, or whatever<br></p>
 </div>
-<hr>
+<p>
 <div class="content">
-my design philosphy is WE DO WHAT LOOKS COOL.<br>
-lfmao. ALSO WE DO NOT FRATERNIZE WITH CLANKERS<br>
-GOD HAS FORSAKEN US<br>
-anyway idfk what to put on this site so uh i guess shit?<p>
-uh... go to my art site here<br></div>
-<a href="art.html" ><button>ART</button></a><a href="games.html" ><button>GAMES</button></a><a href="tests.html" ><button>TESTS</button></a>
+<B>About Me:</B><br>
+i like source engine (mostly tf2 and gmod)<br>
+i like warrior cats<br>
+i like homestuck<br>
+i like All the Teenage Mutant Ninja Turtles series<br>
+i <B>LOVE</b> the vr game RUMBLE<br>
+and i enjoy arg's from time to time such as <a href="https://youtu.be/ImewMLwyjdE?si=RMkQP1vjdAfnd46N">Interloper</a><p>
+i listen to rock, breakcore, and speedcore
 </div>
-</div>
-<a href="https://discord.gg/TWpUMJ9rmp" class="discord-embed" target="_blank">
-  <img src="discord.webp" alt="Discord Logo">
-  <div class="content2electircboogalo">
-    <div class="title">Join Our Discord! :3</div>
-    <div class="description">Surveys for everyone.</div>
-    <div><span class="button">Join Now</span></div>
-  </div>
-</a>
-
-<script>
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-if (isMobile) {
-    window.location.replace("index_mobile.html");
-}
-
-const canvas = document.getElementById("bg");
-canvas.style.position = "fixed";
-canvas.style.top = "0";
-canvas.style.left = "0";
-canvas.style.zIndex = "-999";
-
-const ctx = canvas.getContext("2d");
-const offCanvas = document.createElement("canvas");
-const offCtx = offCanvas.getContext("2d");
-
-function resizeBg() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    offCanvas.width = canvas.width;
-    offCanvas.height = canvas.height;
-}
-window.addEventListener("resize", resizeBg);
-resizeBg();
-
-let mouseX = 0.5;
-let mouseY = 0.5;
-let t = 0;
-
-window.addEventListener("mousemove", e => {
-    mouseX = e.clientX / window.innerWidth;
-    mouseY = e.clientY / window.innerHeight;
-});
-
-function jaggedNoise(x, seed) {
-    return (
-        Math.sin(x * 0.001 + seed) * 0.3 +
-        Math.sin(x * 0.003 + seed * 1.5) * 0.2 +
-        Math.sin(x * 0.007 + seed * 2.3) * 0.1
-    );
-}
-
-function drawMountainLayer(ctxRef, speed, color, baseRatio, maxHeightRatio, seed) {
-    const baseY = canvas.height * baseRatio;
-    const maxHeight = canvas.height * maxHeightRatio;
-    const step = canvas.width / 160;
-    const offset = t * speed;
-
-    ctxRef.beginPath();
-    ctxRef.moveTo(-step, canvas.height);
-
-    for (let x = -step * 3; x <= canvas.width + step * 3; x += step) {
-        let n = jaggedNoise(x + offset, seed);
-        let h = Math.abs(n) * maxHeight;
-        ctxRef.lineTo(x, baseY - h);
-    }
-
-    ctxRef.lineTo(canvas.width + step, canvas.height);
-    ctxRef.closePath();
-    ctxRef.fillStyle = color;
-    ctxRef.fill();
-}
-
-function drawScene(ctxRef) {
-    const grad = ctxRef.createLinearGradient(0, 0, 0, canvas.height);
-    grad.addColorStop(0, "#ff77ff");
-    grad.addColorStop(0.5, "#6a00ff");
-    grad.addColorStop(1, "#000014");
-    ctxRef.fillStyle = grad;
-    ctxRef.fillRect(0, 0, canvas.width, canvas.height);
-
-    const sunSize = Math.min(canvas.width, canvas.height) * 0.11;
-    ctxRef.save();
-    ctxRef.shadowBlur = sunSize * 0.6;
-    ctxRef.shadowColor = "#ff99ff";
-    ctxRef.beginPath();
-    ctxRef.arc(
-        canvas.width * (0.5 + (mouseX - 0.5) * 0.025),
-        canvas.height * (0.34 + (mouseY - 0.5) * 0.025),
-        sunSize,
-        0,
-        Math.PI * 2
-    );
-    ctxRef.fillStyle = "#ffcc66";
-    ctxRef.fill();
-    ctxRef.restore();
-
-    ctxRef.save();
-    ctxRef.shadowBlur = 10;
-    ctxRef.shadowColor = "#ff77ff";
-    ctxRef.strokeStyle = "rgba(255,0,255,0.25)";
-    ctxRef.lineWidth = 1;
-    const spacing = canvas.width / 10;
-    for (let y = canvas.height * 0.6; y < canvas.height; y += spacing) {
-        ctxRef.beginPath();
-        ctxRef.moveTo(0, y);
-        ctxRef.lineTo(canvas.width, y);
-        ctxRef.stroke();
-    }
-    for (let x = 0; x < canvas.width; x += spacing) {
-        ctxRef.beginPath();
-        ctxRef.moveTo(x, canvas.height * 0.6);
-        ctxRef.lineTo(x + (mouseX - 0.5) * 90, canvas.height);
-        ctxRef.stroke();
-    }
-    ctxRef.restore();
-
-    drawMountainLayer(ctxRef, 0.15, "#07000c", 0.86, 0.5, 1.2);
-    drawMountainLayer(ctxRef, 0.45, "#120018", 0.82, 0.5, 3.7);
-    drawMountainLayer(ctxRef, 0.85, "#1e002a", 0.78, 0.5, 7.9);
-    drawMountainLayer(ctxRef, 1.3, "#300040", 0.72, 0.5, 9.1);
-}
-
-function applyChromatic(ctxRef, sourceCanvas) {
-    const width = canvas.width;
-    const height = canvas.height;
-
-    // Create radial mask
-    const edgeGradient = ctxRef.createRadialGradient(
-        width / 2, height / 2, Math.min(width, height) * 0.35,
-        width / 2, height / 2, Math.min(width, height) * 0.5
-    );
-    edgeGradient.addColorStop(0, "rgba(255,255,255,0)");
-    edgeGradient.addColorStop(1, "rgba(255,255,255,1)");
-
-    // Create temp canvas for chroma effect
-    const tmpCanvas = document.createElement("canvas");
-    tmpCanvas.width = width;
-    tmpCanvas.height = height;
-    const tmpCtx = tmpCanvas.getContext("2d");
-
-    tmpCtx.clearRect(0, 0, width, height);
-
-    const offsets = [
-        {x: 4, y: 0, color: "red"},
-        {x: -4, y: 0, color: "green"},
-        {x: 0, y: 4, color: "blue"}
-    ];
-
-    offsets.forEach(ch => {
-        tmpCtx.save();
-        tmpCtx.globalCompositeOperation = "source-over";
-        tmpCtx.globalAlpha = 0.3;
-        tmpCtx.drawImage(sourceCanvas, ch.x, ch.y, width, height);
-        tmpCtx.globalCompositeOperation = "destination-in";
-        tmpCtx.fillStyle = edgeGradient;
-        tmpCtx.fillRect(0, 0, width, height);
-        tmpCtx.restore();
-    });
-
-    // Overlay on main canvas
-    ctxRef.save();
-    ctxRef.globalCompositeOperation = "lighter";
-    ctxRef.drawImage(tmpCanvas, 0, 0);
-    ctxRef.restore();
-}
-
-function drawBg() {
-    t += 3.2;
-
-    // Clear offscreen canvas and redraw scene
-    offCtx.clearRect(0, 0, canvas.width, canvas.height);
-    drawScene(offCtx);
-
-    // Clear main canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw everything normally (this includes your page via CSS transparency)
-    ctx.drawImage(offCanvas, 0, 0);
-
-    // Apply chromatic aberration on top
-    applyChromatic(ctx, offCanvas);
-
-    requestAnimationFrame(drawBg);
-}
-
-drawBg();
-</script>
-
-</body>
+<p>
+<div class="content">
+contact:<br>
+discord:axolotl_in_void
+</div><p>
 </html>
