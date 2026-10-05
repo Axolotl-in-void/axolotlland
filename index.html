@@ -99,4 +99,9 @@ i listen to rock, breakcore, and speedcore
 contact:<br>
 discord:axolotl_in_void
 </div><p>
+surveytime<br>
+ <script>
+const e=new Date("2026-01-01T00:00:00Z"),m=["sun","lun","ver"];
+function as(){let s=(Date.now()-e)/400,t=Math.floor(s/86400),y=Math.floor(t/36)+1,d=t%36,h=Math.floor((s%86400)/3600),n=Math.floor((s%3600)/60),c=Math.floor(s%60);document.body.insertAdjacentHTML("beforeend",`<div class="content">AS ${y} • ${m[Math.floor(d/12)]} • W${Math.floor(d%12/3)+1} D${d%3+1} • ${String(h).padStart(2,"0")}:${String(n).padStart(2,"0")}:${String(c).padStart(2,"0")}</div>`)}setInterval(()=>{document.querySelectorAll(".content").forEach((x,i)=>i==document.querySelectorAll(".content").length-1&&x.remove());as()},400);as()
+</script>
 </html>
